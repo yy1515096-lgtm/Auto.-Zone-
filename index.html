@@ -1,100 +1,63 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AUTO ZONE | كماليات السيارات</title>
-    <style>
-        :root { --main: #f5c542; --bg: #0f0f0f; --card: #1a1a1a; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: white; margin: 0; padding-bottom: 50px; text-align: center; }
-        
-        /* تنسيق الهيدر واللوجو */
-        header { background: #000; padding: 30px 20px; border-bottom: 4px solid var(--main); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .logo-img { height: 100px; width: auto; margin-bottom: 15px; border-radius: 10px; }
-        header h1 { margin: 0; font-size: 30px; color: var(--main); letter-spacing: 2px; }
-        header p { margin: 10px 0 0; color: #aaa; font-size: 1rem; }
-        
-        .container { max-width: 1200px; margin: auto; padding: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-        
-        /* تنسيق الكارت */
-        .card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid #333; transition: 0.3s; }
-        .card:hover { transform: translateY(-8px); border-color: var(--main); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
-        .card img { width: 100%; height: 220px; object-fit: cover; background: #222; }
-        .card-info { padding: 20px; }
-        .card-info h3 { margin: 0 0 10px; font-size: 1.2rem; color: #fff; }
-        .price { color: var(--main); font-size: 1.4rem; font-weight: bold; margin-bottom: 15px; display: block; }
-        
-        /* زرار الواتساب */
-        .btn-wa { display: flex; align-items: center; justify-content: center; background: #25d366; color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; transition: 0.3s; }
-        .btn-wa:hover { background: #1da851; }
-
-        #loader { padding: 50px; color: var(--main); font-size: 1.2rem; }
-    </style>
+    <title>AUTO ZONE | كماليات السيارات - Batman Edition</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header>
-    <img src="https://via.placeholder.com/150/f5c542/000000?text=AUTO+ZONE" alt="Auto Zone Logo" class="logo-img">
-    <h1>AUTO ZONE</h1>
-    <p>🚀 ملوك التعديل - كماليات السيارات بأعلى جودة 🚀</p>
-</header>
+    <header>
+        <img src="logo.jpg" alt="Auto Zone Logo"
+            style="width: 150px; height: auto; border-radius: 50%; box-shadow: 0 0 20px rgba(245, 197, 66, 0.5); margin-bottom: 15px;">
+        <h1>AUTO ZONE</h1>
+        <p>منطقة القوة لكماليات السيارات - Batman Edition</p>
+    </header>
 
-<div class="container">
-    <div id="loader">جاري تحميل المنتجات... تأكد من مشاركة الجدول</div>
-    <div class="grid" id="products-container"></div>
-</div>
+    <nav>
+        <a href="#products">المنتجات</a>
+        <a href="#about">عنّا</a>
+        <a href="#contact">تواصل معنا</a>
+    </nav>
 
-<script>
-    // ID الجدول بتاعك اللي اخترته
-    const sheetId = '1BQSmvcThZKjURQFxJmebzMuR7_FdzR5peoLUAS9c1JQ';
-    // سحب البيانات بصيغة CSV لضمان السرعة وتفادي الأخطاء
-    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
+    <div class="container" id="products">
+        <h2>🔥 منتجاتنا المميزة</h2>
+        <div class="products" id="products-container">
+            <!-- Products will be loaded here dynamically -->
+            <p id="loading-text" style="text-align:center; grid-column: 1/-1; color: #aaa;">جاري تحميل المنتجات...</p>
+        </div>
+    </div>
 
-    fetch(url)
-        .then(res => res.text())
-        .then(csvText => {
-            // تحويل النص من CSV إلى مصفوفة بيانات
-            const rows = csvText.split('\n').map(row => {
-                // تعامل مع الفواصل في حالة وجود نصوص داخل علامات تنصيص
-                return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            });
-            
-            let html = '';
-            // بنبدأ من i=1 عشان نتخطى صف العناوين
-            for (let i = 1; i < rows.length; i++) {
-                let [name, price, img, waKey] = rows[i];
-                
-                // تنظيف البيانات من علامات التنصيص الزائدة
-                if (name) name = name.replace(/"/g, "");
-                if (price) price = price.replace(/"/g, "");
-                if (img) img = img.replace(/"/g, "").trim();
-                if (waKey) waKey = waKey.replace(/"/g, "");
+    <div class="container" id="about">
+        <h2>ℹ️ عن المتجر</h2>
+        <div class="about-box">
+            <p style="font-size: 1.2rem; line-height: 1.8;">
+                أهلاً بكم في <strong>AUTO ZONE</strong>. نحن متخصصون في تعديل وكماليات السيارات، ونقدم لكم تشكيلة حصرية
+                من إكسسوارات "Batman Edition" لتجعل سيارتكم مميزة وقوية. نضمن لكم أفضل جودة، أسعار منافسة، وشحن سريع لكل
+                محافظات مصر.
+            </p>
+        </div>
+    </div>
 
-                if (!name || name.trim() === "") continue;
+    <div class="container" id="contact">
+        <h2>📞 تواصل معنا</h2>
+        <div class="contact-box">
+            <p>للطلب والاستفسار يرجى التواصل عبر واتساب:</p>
+            <div class="contact-highlight">01040326645</div>
+            <a class="btn" style="width: 200px; margin: 0 auto;" href="https://wa.me/201040326645" target="_blank">تواصل
+                الآن</a>
+            <p style="margin-top: 20px; color: #777;">متاحين للرد على مدار اليوم</p>
+        </div>
+    </div>
 
-                html += `
-                    <div class="card">
-                        <img src="${img || 'https://via.placeholder.com/400x300?text=AUTO+ZONE'}" alt="${name}">
-                        <div class="card-info">
-                            <h3>${name}</h3>
-                            <span class="price">${price || 'اسأل عن السعر'}</span>
-                            <a href="https://wa.me/201040326645?text=استفسار عن سعر: ${waKey || name}" class="btn-wa">
-                                💬 اطلب واتساب الآن
-                            </a>
-                        </div>
-                    </div>
-                `;
-            }
+    <footer>
+        <p>© 2025 AUTO ZONE - جميع الحقوق محفوظة</p>
+    </footer>
 
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('products-container').innerHTML = html;
-        })
-        .catch(err => {
-            document.getElementById('loader').innerHTML = '❌ خطأ: تأكد من تفعيل المشاركة في الجدول (Anyone with link)';
-            console.error(err);
-        });
-</script>
-
+    <script src="script.js"></script>
 </body>
+
 </html>
