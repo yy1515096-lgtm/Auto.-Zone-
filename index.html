@@ -1,63 +1,91 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AUTO ZONE | كماليات السيارات - Batman Edition</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUTO ZONE | كماليات السيارات</title>
+    <style>
+        body {font-family: Tahoma, Arial; margin:0; background:#1c1c1c; color:#f5f5f5}
+        header {background:#0f0f0f; color:#f5c542; padding:25px; text-align:center; border-bottom: 3px solid #f5c542}
+        #main-logo { max-height: 100px; margin-bottom: 10px; display: none; margin: 0 auto; }
+        header h1 {margin:0; font-size:30px; letter-spacing:2px}
+        nav {background:#f5c542; padding:12px; text-align:center}
+        nav a {color:#111; margin:0 12px; text-decoration:none; font-weight:bold}
+        .container {padding:20px; max-width: 1100px; margin: auto;}
+        .products {display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px}
+        .card {background:#111; border-radius:12px; padding:15px; box-shadow:0 4px 15px rgba(0,0,0,0.6); text-align: center; border: 1px solid #222;}
+        .card img {width:100%; height:200px; border-radius:10px; object-fit: cover; background:#222}
+        .price {color:#f5c542; font-weight:bold; display: block; margin: 10px 0; font-size: 1.3em;}
+        .btn {display:block; background:#f5c542; color:#111; text-align:center; padding:12px; border-radius:8px; text-decoration:none; font-weight:bold}
+        .loading { text-align: center; color: #f5c542; padding: 100px; font-size: 20px; }
+    </style>
 </head>
-
 <body>
 
-    <header>
-        <img src="logo.jpg" alt="Auto Zone Logo"
-            style="width: 150px; height: auto; border-radius: 50%; box-shadow: 0 0 20px rgba(245, 197, 66, 0.5); margin-bottom: 15px;">
-        <h1>AUTO ZONE</h1>
-        <p>منطقة القوة لكماليات السيارات - Batman Edition</p>
-    </header>
+<header>
+    <img src="" id="main-logo" alt="Logo">
+    <h1 id="site-title">AUTO ZONE</h1>
+    <p>منطقة القوة لكماليات السيارات</p>
+</header>
 
-    <nav>
-        <a href="#products">المنتجات</a>
-        <a href="#about">عنّا</a>
-        <a href="#contact">تواصل معنا</a>
-    </nav>
+<nav>
+    <a href="#products">المنتجات</a>
+    <a href="https://wa.me/201040326645">تواصل معنا</a>
+</nav>
 
-    <div class="container" id="products">
-        <h2>🔥 منتجاتنا المميزة</h2>
-        <div class="products" id="products-container">
-            <!-- Products will be loaded here dynamically -->
-            <p id="loading-text" style="text-align:center; grid-column: 1/-1; color: #aaa;">جاري تحميل المنتجات...</p>
-        </div>
-    </div>
+<div class="container">
+    <div id="loading" class="loading">جاري سحب البيانات من الشيت...</div>
+    <div class="products" id="product-list"></div>
+</div>
 
-    <div class="container" id="about">
-        <h2>ℹ️ عن المتجر</h2>
-        <div class="about-box">
-            <p style="font-size: 1.2rem; line-height: 1.8;">
-                أهلاً بكم في <strong>AUTO ZONE</strong>. نحن متخصصون في تعديل وكماليات السيارات، ونقدم لكم تشكيلة حصرية
-                من إكسسوارات "Batman Edition" لتجعل سيارتكم مميزة وقوية. نضمن لكم أفضل جودة، أسعار منافسة، وشحن سريع لكل
-                محافظات مصر.
-            </p>
-        </div>
-    </div>
+<script>
+    // ده رابط الشيت بتاعك الجديد اللي انت بعته
+    const sheetId = '1WAhJXEE3fbBm6plCZSdO0YrirItv7yLduoEA7aDiXJQ';
+    const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
 
-    <div class="container" id="contact">
-        <h2>📞 تواصل معنا</h2>
-        <div class="contact-box">
-            <p>للطلب والاستفسار يرجى التواصل عبر واتساب:</p>
-            <div class="contact-highlight">01040326645</div>
-            <a class="btn" style="width: 200px; margin: 0 auto;" href="https://wa.me/201040326645" target="_blank">تواصل
-                الآن</a>
-            <p style="margin-top: 20px; color: #777;">متاحين للرد على مدار اليوم</p>
-        </div>
-    </div>
+    async function fetchProducts() {
+        try {
+            const response = await fetch(csvUrl);
+            const data = await response.text();
+            
+            // تجاهل أول صف (العناوين)
+            const rows = data.split('\n').slice(1); 
+            const productList = document.getElementById('product-list');
+            const logoImg = document.getElementById('main-logo');
+            const siteTitle = document.getElementById('site-title');
+            
+            document.getElementById('loading').style.display = 'none';
 
-    <footer>
-        <p>© 2025 AUTO ZONE - جميع الحقوق محفوظة</p>
-    </footer>
+            rows.forEach((row, index) => {
+                const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(col => col.replace(/^"(.*)"$/, '$1').trim());
 
-    <script src="script.js"></script>
+                if (cols.length >= 2 && cols[0] !== "") {
+                    const name = cols[0];      // عمود A
+                    const price = cols[1];     // عمود B
+                    const imgUrl = cols[2];    // عمود C (صور المنتجات)
+                    const logoUrl = cols[3];   // عمود D (اللوجو)
+
+                    // لو فيه لوجو في أول صف عمود D يظهره
+                    if (index === 0 && logoUrl) {
+                        logoImg.src = logoUrl;
+                        logoImg.style.display = 'block';
+                        siteTitle.style.display = 'none';
+                    }
+
+                    productList.innerHTML += `
+                        <div class="card">
+                            <img src="${imgUrl}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                            <h3>${name}</h3>
+                            <span class="price">${price}</span>
+                            <a class="btn" href="https://wa.me/201040326645?text=استفسار عن: ${name}">اطلب واتساب</a>
+                        </div>`;
+                }
+            });
+        } catch (error) {
+            document.getElementById('loading').innerText = "حدث خطأ.. تأكد من عمل Publish to web";
+        }
+    }
+    fetchProducts();
+</script>
 </body>
-
 </html>
